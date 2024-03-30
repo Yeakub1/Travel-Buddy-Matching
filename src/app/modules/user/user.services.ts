@@ -7,8 +7,8 @@ import httpStatus from "http-status";
 import config from "../../../config";
 import { jswHelpers } from "../../../helpers/jwtHelpers";
 
-const createUser = async (payload: User, payloads: UserProfile) => {
-  console.log(payloads);
+const createUser = async (payload: User, profile: UserProfile) => {
+  console.log({profile});
   const isUserExits = await prisma.user.findUnique({
     where: {
       email: payload.email,
@@ -42,7 +42,7 @@ const createUser = async (payload: User, payloads: UserProfile) => {
   });
 
    await prisma.userProfile.create({
-     data: { userId: result.id, bio: payloads.bio, age: payloads.age },
+     data: { userId: result.id, bio: profile.bio, age: profile.age },
    });
 
   return result;
@@ -50,11 +50,13 @@ const createUser = async (payload: User, payloads: UserProfile) => {
 
 
 const loginUser = async (payload: { email: string; password: string }) => {
+  
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: payload.email,
     },
   });
+  console.log(userData);
 
   const isCorrectPassword: boolean = await bcrypt.compare(
     payload.password,

@@ -4,9 +4,9 @@ import SendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import { userServices } from "./user.services";
 
-const createUser = catchAsync( async (req: Request, res: Response, payloads: any) => {
-  const result = await userServices.createUser(req.body, payloads);
-  console.log(payloads);
+const createUser = catchAsync(async (req: Request, res: Response) => {
+  const userdata= req.body
+  const result = await userServices.createUser(userdata, userdata.profile);
     SendResponse(res, {
       statusCode: httpStatus.CREATED,
       success: true,
@@ -29,6 +29,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "User login successfuly!",
+    // data: result
     data: {
       accessToken: result.accessToken,
     },
